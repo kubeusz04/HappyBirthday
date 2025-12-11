@@ -1,0 +1,1404 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Birthday Yoon — Cosmic Journey</title>
+
+  <style>
+    html,body{
+      height:100%; margin:0;
+      font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:#000; color:#fff;
+      overflow:hidden;
+    }
+    #app{height:100%;width:100%;position:relative;overflow:hidden}
+    canvas{display:block}
+
+    .ui {
+      position:absolute;left:50%;bottom:30px;z-index:10;
+      transform:translateX(-50%);
+      display:flex; gap:.5rem; align-items:center; justify-content:center
+    }
+    .btn{
+      background:linear-gradient(180deg, rgba(255,50,50,0.15), rgba(200,20,20,0.1));
+      border:1px solid rgba(255,100,100,0.3);
+      padding:8px 12px; border-radius:10px;
+      color:#ffcccc; backdrop-filter:blur(6px); cursor:pointer;
+    }
+    .btn:hover{
+      background:linear-gradient(180deg, rgba(255,70,70,0.2), rgba(220,30,30,0.15));
+      border-color:rgba(255,120,120,0.4);
+    }
+    .btn:active{transform:translateY(1px)}
+    .restart-btn{
+      position:absolute; bottom:40px; left:50%; transform:translateX(-50%);
+      z-index:50; padding:14px 28px; font-size:18px; font-weight:bold;
+      background:linear-gradient(135deg, rgba(255,80,80,0.4), rgba(200,30,30,0.4));
+      border:2px solid rgba(255,150,150,0.4);
+      box-shadow:0 8px 24px rgba(255,0,0,0.3);
+      opacity:0; visibility:hidden;
+      pointer-events:none;
+      transition:all 0.3s ease;
+    }
+    .restart-btn.show{
+      opacity:1; visibility:visible;
+      pointer-events:auto;
+      animation:slideUpButton 0.8s ease-out 2s forwards;
+    }
+    .restart-btn:hover{
+      background:linear-gradient(135deg, rgba(255,100,100,0.5), rgba(220,40,40,0.5));
+      transform:translateX(-50%) translateY(-2px);
+      box-shadow:0 12px 32px rgba(255,0,0,0.4);
+    }
+    @keyframes slideUpButton{
+      from{opacity:0;transform:translateX(-50%) translateY(20px)}
+      to{opacity:1;transform:translateX(-50%) translateY(0)}
+    }
+
+    .subtitle-overlay{
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      z-index:1000;
+      background:#000;
+      pointer-events:none;
+    }
+    .subtitle-container{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:90%;
+      max-width:800px;
+      text-align:center;
+    }
+    .subtitle-text{
+      font-size:28px;
+      line-height:1.6;
+      color:#fff;
+      text-shadow:0 0 20px rgba(255,255,255,0.5), 0 2px 10px rgba(0,0,0,0.8);
+      opacity:0;
+      transform:translateY(20px);
+      transition:opacity 1.5s ease, transform 1.5s ease;
+      font-weight:300;
+      letter-spacing:1px;
+    }
+    .subtitle-text.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+    .subtitle-text.fade-out{
+      opacity:0;
+      transform:translateY(-20px);
+      transition:opacity 1s ease, transform 1s ease;
+    }
+    @media (max-width:768px){
+      .subtitle-text{
+        font-size:20px;
+        padding:0 20px;
+      }
+    }
+    @media (max-width:480px){
+      .subtitle-text{
+        font-size:18px;
+        padding:0 15px;
+      }
+    }
+
+    .overlay{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      z-index:20;
+      background:linear-gradient(180deg, rgba(30,0,0,0.75), rgba(0,0,0,0.85));
+      padding:20px;
+    }
+    .card{
+      max-width:900px;padding:28px;border-radius:16px;
+      background:linear-gradient(135deg, rgba(40,5,5,0.8), rgba(20,0,0,0.7));
+      box-shadow:0 10px 30px rgba(255,0,0,0.3);
+      border:1px solid rgba(255,100,100,0.2); text-align:center
+    }
+    h1{font-size:28px;margin:0 0 12px; color:#ffcccc}
+    p{margin:0 0 18px;font-size:16px;color:#ffaaaa}
+
+    .final{
+      position:absolute; inset:0;
+      display:none; align-items:center; justify-content:center;
+      background:#000; z-index:30;
+    }
+    .final img{
+      max-width:90%;max-height:80%;
+      border-radius:12px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.7);
+    }
+    .wishes{
+      position:absolute;top:50%;transform:translateY(-50%);
+      z-index:40;color:#fff;
+      text-shadow:0 2px 12px rgba(0,0,0,0.6);
+      opacity:0;
+      visibility:hidden;
+      max-width:300px;
+      padding:24px;
+      background:linear-gradient(135deg, rgba(40,5,5,0.9), rgba(30,0,0,0.85));
+      border:1px solid rgba(255,100,100,0.3);
+      border-radius:20px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 10px 40px rgba(255,0,0,0.4);
+    }
+    .wishes.left{
+      left:5%;text-align:right;
+    }
+    .wishes.right{
+      right:5%;text-align:left;
+    }
+    .wishes.show{
+      visibility:visible;
+      animation:fadeInWishes 1.5s ease-in 1s forwards;
+    }
+    @keyframes fadeInWishes{
+      from{opacity:0;transform:translateY(-50%) translateX(30px)}
+      to{opacity:1;transform:translateY(-50%) translateX(0)}
+    }
+    .wishes.right.show{
+      animation:fadeInWishesRight 1.5s ease-in 1s forwards;
+    }
+    @keyframes fadeInWishesRight{
+      from{opacity:0;transform:translateY(-50%) translateX(-30px)}
+      to{opacity:1;transform:translateY(-50%) translateX(0)}
+    }
+    .wishes .wish-title{
+      font-size:32px;font-weight:bold;margin-bottom:16px;
+      background:linear-gradient(135deg, #ffcccc, #ff8888);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      line-height:1.3;
+    }
+    .wishes .wish-text{
+      font-size:18px;line-height:1.8;color:#ffaaaa;
+      margin-bottom:12px;
+    }
+    .wishes .wish-emoji{
+      font-size:40px;margin:12px 0;
+      display:block;
+    }
+
+    .footer{
+      position:absolute; right:20px; bottom:20px;
+      z-index:10; opacity:0.8; font-size:13px
+    }
+
+    .planet-comment{
+      position:absolute; top:30px; left:50%; transform:translateX(-50%);
+      z-index:15; max-width:600px; padding:16px 24px;
+      background:linear-gradient(135deg, rgba(40,5,5,0.9), rgba(30,0,0,0.85));
+      border:1px solid rgba(255,100,100,0.3);
+      border-radius:16px; backdrop-filter:blur(10px);
+      text-align:center; font-size:16px; color:#fff;
+      box-shadow:0 8px 24px rgba(255,0,0,0.4);
+      opacity:0; visibility:hidden;
+      transition:opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .planet-comment.show{
+      opacity:1; visibility:visible;
+    }
+    .planet-comment .planet-name{
+      font-size:20px; font-weight:bold; margin-bottom:8px;
+      color:#ffcccc; text-shadow:0 2px 8px rgba(0,0,0,0.6);
+    }
+    .planet-comment .comment-text{
+      line-height:1.5; color:#ffaaaa;
+    }
+
+    .landing-overlay{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      z-index:25;
+      background:linear-gradient(180deg, rgba(30,0,0,0.9), rgba(0,0,0,0.95));
+      backdrop-filter:blur(10px);
+      padding:20px;
+    }
+    .landing-card{
+      max-width:800px; padding:32px; border-radius:20px;
+      background:linear-gradient(135deg, rgba(40,5,5,0.95), rgba(30,0,0,0.9));
+      box-shadow:0 15px 50px rgba(255,0,0,0.5);
+      border:2px solid rgba(255,100,100,0.4);
+      text-align:center;
+    }
+    .landing-planet-image{
+      max-width:100%; max-height:400px;
+      border-radius:16px;
+      box-shadow:0 10px 40px rgba(255,0,0,0.4);
+      margin-bottom:20px;
+    }
+    .landing-planet-name{
+      font-size:36px; font-weight:bold; margin-bottom:16px;
+      color:#ffcccc; text-shadow:0 3px 10px rgba(0,0,0,0.7);
+    }
+    .landing-comment{
+      font-size:20px; line-height:1.6; color:#ffaaaa;
+      margin-bottom:24px; padding:0 20px;
+    }
+
+    .stars{
+      position:absolute; inset:0; z-index:0;
+      background:radial-gradient(ellipse at center,
+      rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 40%);
+    }
+
+    @media (max-width:600px){
+      h1{font-size:20px}
+      .wishes{
+        max-width:140px;
+        padding:16px;
+        font-size:14px;
+      }
+      .wishes.left{left:2%;}
+      .wishes.right{right:2%;}
+      .wishes .wish-title{font-size:20px;margin-bottom:12px;}
+      .wishes .wish-text{font-size:13px;line-height:1.6;margin-bottom:10px;}
+      .wishes .wish-emoji{font-size:24px;margin:8px 0;}
+      .landing-card{
+        padding:20px; max-width:90%;
+      }
+      .landing-planet-image{
+        max-height:250px;
+      }
+      .landing-planet-name{
+        font-size:28px;
+      }
+      .landing-comment{
+        font-size:16px; padding:0 10px;
+      }
+    }
+    @media (max-width:900px){
+      .wishes{
+        max-width:220px;
+        padding:20px;
+      }
+      .wishes .wish-title{font-size:26px;}
+      .wishes .wish-text{font-size:16px;}
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="stars"></div>
+
+    <div class="ui">
+      <button id="enterBtn" class="btn">Enter Rocket</button>
+      <button id="nextBtn" class="btn" style="display:none">Next Planet</button>
+      <button id="exitBtn" class="btn" style="display:none">Exit the rocket</button>
+      <button id="musicToggle" class="btn" style="display:none">Pause Music</button>
+    </div>
+
+    <div id="planetComment" class="planet-comment">
+      <div class="planet-name"></div>
+      <div class="comment-text"></div>
+    </div>
+
+    <div id="landingOverlay" class="landing-overlay" style="display:none">
+      <div class="landing-card">
+        <img id="landingPlanetImage" class="landing-planet-image" />
+        <div class="landing-planet-name"></div>
+        <div class="landing-comment"></div>
+        <button id="continueBtn" class="btn" style="margin-top:20px">Continue Journey</button>
+      </div>
+    </div>
+
+
+    <div id="introSubtitle" class="subtitle-overlay">
+      <div class="subtitle-container">
+        <div id="subtitleText" class="subtitle-text"></div>
+      </div>
+    </div>
+
+    <div id="intro" class="overlay" style="display:none">
+      <div class="card">
+        <h1>So far space travel isn't possible but I make it to feel a little bit like our dream journey!</h1>
+        <p>Click <strong>Enter Rocket</strong> to board. We'll visit the planets of the Solar System.
+           When we return to the Moon, click <strong>Exit the rocket</strong> for your surprise.</p>
+
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
+          <button id="enterBtn2" class="btn">Enter Rocket</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="final" class="final">
+      <img id="finalGif" src="moon_anime.gif" />
+      <div id="wishesLeft" class="wishes left" style="display:none">
+        <div class="wish-title">Happy Birthday, <strong>Yoon</strong>! 🎂</div>
+        <div class="wish-emoji">✨🌙⭐</div>
+        <div class="wish-text">
+          As you sit here on the moon, looking out at the stars, I hope you know how special you are. 
+          Your kindness lights up every room you enter, just like the stars light up the night sky.
+        </div>
+        <div class="wish-text">
+          May this new year bring you endless joy, incredible adventures, and dreams that reach beyond the stars. 
+          You deserve all the happiness the universe has to offer.
+        </div>
+      </div>
+      <div id="wishesRight" class="wishes right" style="display:none">
+        <div class="wish-title">To Many More Adventures! 🚀</div>
+        <div class="wish-emoji">💫🌟🎉</div>
+        <div class="wish-text">
+          From Earth to the Moon, and everywhere in between — may your journey through life be as beautiful 
+          and wondrous as this cosmic adventure we just shared together.
+        </div>
+        <div class="wish-text">
+          Here's to another amazing year filled with laughter, love, and moments that take your breath away. 
+          Keep shining bright, Yoon! 🌟
+        </div>
+      </div>
+      <button id="restartBtn" class="btn restart-btn" style="display:none">Let's fly again! 🚀</button>
+      <button id="replayBirthdayBtn" class="btn" style="display:none; position:absolute; bottom:100px; left:50%; transform:translateX(-50%); z-index:50;">Play Birthday Song Again 🎵</button>
+    </div>
+  </div>
+
+  <!-- THREE.JS MODULAR -->
+  <script type="module">
+    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
+
+    // ----------------------------------------------------
+    // DATA
+    // ----------------------------------------------------
+// Planet data with real solar system proportions
+// Radii: Scaled to maintain real relative sizes (Earth = 0.65, Jupiter = 2.5 for visibility)
+// Real relative sizes: Mercury:0.38, Venus:0.95, Earth:1.0, Mars:0.53, Jupiter:11.2, Saturn:9.4, Uranus:4.0, Neptune:3.9, Moon:0.27
+// Distances: Compressed scale maintaining relative order (Earth = 16)
+// Real AU: Mercury:0.39, Venus:0.72, Earth:1.0, Mars:1.52, Jupiter:5.2, Saturn:9.5, Uranus:19.2, Neptune:30.1
+// Orbital angles: Spread planets around Sun in circular orbits (in radians)
+const PLANETS = [
+  {name:'Mercury', file:'textures/2k_mercury.jpg', radius:0.22, distance:6.2, angle:0, comment:'Mercury! The speed demon of the solar system. It\'s like the planet that never learned to slow down! 🏃‍♂️💨'},
+  {name:'Venus',   file:'textures/2k_venus.jpg',   radius:0.55, distance:11.5, angle:Math.PI * 0.4, comment:'Venus! The hottest planet (literally). It\'s basically a spa day gone wrong - way too hot! 🔥🌡️'},
+  {name:'Earth',   file:'textures/2k_earth.jpg',   radius:0.65, distance:16, angle:Math.PI * 0.8, comment:'Earth! Home sweet home! The only planet with pizza delivery (so far). 🏠🌍'},
+  {name:'Mars',    file:'textures/2k_mars.jpg',    radius:0.34, distance:20, angle:Math.PI * 1.2, comment:'Mars! The red planet where everyone wants to move. Real estate is cheap, but the commute is killer! 🚀🔴'},
+  {name:'Jupiter', file:'textures/2k_jupiter.jpg', radius:2.5, distance:28, angle:Math.PI * 1.6, comment:'Jupiter! The big boss of planets. It\'s so huge, it could fit all the other planets inside! Talk about showing off! 🌪️👑'},
+  {name:'Saturn',  file:'textures/2k_saturn.jpg',  radius:2.1, distance:42, angle:Math.PI * 2.0, comment:'Saturn! The planet with the coolest accessories - those rings are absolutely stunning! Fashion icon of the solar system! 💍✨'},
+  {name:'Uranus',  file:'textures/2k_uranus.jpg',  radius:0.9, distance:52, angle:Math.PI * 2.4, comment:'Uranus! The planet that rolls sideways through space. It\'s like the solar system\'s rebel! 😎🔄'},
+  {name:'Neptune', file:'textures/2k_neptune.jpg', radius:0.88, distance:65, angle:Math.PI * 2.8, comment:'Neptune! The farthest planet, living its best life in the outer suburbs. Very chill vibes! 🌊💙'},
+  {name:'Moon',    file:'textures/2k_moon.jpg',    radius:0.12, distance:17.5, angle:Math.PI * 0.8, comment:'The Moon! Earth\'s loyal sidekick. Always there, always watching. The best neighbor ever! 🌙💫'}
+];
+
+const SCALE_RADIUS = 1;      // teraz nie trzeba mocno skalować
+const SCALE_DISTANCE = 1;    // odległości już dopasowane
+
+
+    // ----------------------------------------------------
+    // GLOBALS
+    // ----------------------------------------------------
+    let scene, camera, renderer, clock;
+    let planetObjects = [];
+    let currentIndex = 2; // start at Earth
+      let isAnimating = false;
+      let saturnRings = null; // Store Saturn rings reference
+      let sunMesh = null; // Store Sun mesh
+    
+    // Journey order: visit all planets in sequence, ending at Moon
+    // Earth -> Mars -> Jupiter -> Saturn -> Uranus -> Neptune -> Mercury -> Venus -> Moon
+    const JOURNEY_ORDER = [2, 3, 4, 5, 6, 7, 0, 1, 8]; // Indices: Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Mercury, Venus, Moon
+    let journeyIndex = 0; // Current position in journey
+
+    // UI
+    const enterBtn = document.getElementById("enterBtn");
+    const enterBtn2 = document.getElementById("enterBtn2");
+    const nextBtn = document.getElementById("nextBtn");
+    const exitBtn = document.getElementById("exitBtn");
+    const musicToggle = document.getElementById("musicToggle");
+    const planetComment = document.getElementById("planetComment");
+    const planetNameEl = planetComment.querySelector(".planet-name");
+    const commentTextEl = planetComment.querySelector(".comment-text");
+    const landingOverlay = document.getElementById("landingOverlay");
+    const landingPlanetImage = document.getElementById("landingPlanetImage");
+    const landingPlanetName = landingOverlay.querySelector(".landing-planet-name");
+    const landingComment = landingOverlay.querySelector(".landing-comment");
+    const continueBtn = document.getElementById("continueBtn");
+
+    const intro = document.getElementById("intro");
+    const introSubtitle = document.getElementById("introSubtitle");
+    const subtitleText = document.getElementById("subtitleText");
+    const final = document.getElementById("final");
+    const wishesLeft = document.getElementById("wishesLeft");
+    const wishesRight = document.getElementById("wishesRight");
+    const restartBtn = document.getElementById("restartBtn");
+    const replayBirthdayBtn = document.getElementById("replayBirthdayBtn");
+
+    // Audio
+    const audio = new Audio("music.mp3");
+    audio.loop = true;
+    audio.volume = 0.7; // Set volume to 70%
+    audio.preload = "auto"; // Preload the audio
+    let audioPlaying = false;
+    
+    // Birthday song for Moon landing - play only once
+    const birthdayAudio = new Audio("happybirthday.mp3");
+    birthdayAudio.loop = false; // Play only once
+    birthdayAudio.volume = 0.7;
+    birthdayAudio.preload = "auto";
+    
+    // Try to load audio and handle errors
+    audio.addEventListener('error', (e) => {
+      console.error('Audio loading error:', e);
+      console.error('Audio file path:', audio.src);
+    });
+    
+    audio.addEventListener('canplaythrough', () => {
+      console.log('Audio ready to play');
+    });
+
+    // ----------------------------------------------------
+    // INIT
+    // ----------------------------------------------------
+    function initThree(){
+      const container = document.getElementById("app");
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 2000);
+      camera.position.set(0, 2, 10);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.8; // Increased to better show planets with new lighting
+      container.appendChild(renderer.domElement);
+
+      clock = new THREE.Clock();
+
+      // Ambient light for overall scene illumination - increased for better planet visibility
+      scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+
+      // Create starry sky
+      createStarField();
+      
+      // Create Sun
+      createSun();
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
+    // ----------------------------------------------------
+    // CREATE STARFIELD
+    // ----------------------------------------------------
+    function createStarField(){
+      const starGeometry = new THREE.BufferGeometry();
+      const starCount = 5000;
+      const positions = new Float32Array(starCount * 3);
+      const colors = new Float32Array(starCount * 3);
+
+      // Create stars in a large sphere around the scene
+      for(let i = 0; i < starCount; i++){
+        const radius = 500 + Math.random() * 500;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(Math.random() * 2 - 1);
+
+        positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+        positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        positions[i * 3 + 2] = radius * Math.cos(phi);
+
+        // Vary star colors (white to slightly blue/white)
+        const brightness = 0.7 + Math.random() * 0.3;
+        colors[i * 3] = brightness;
+        colors[i * 3 + 1] = brightness;
+        colors[i * 3 + 2] = brightness + Math.random() * 0.2;
+      }
+
+      starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      starGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const starMaterial = new THREE.PointsMaterial({
+        size: 1.5,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.9
+      });
+
+      const stars = new THREE.Points(starGeometry, starMaterial);
+      scene.add(stars);
+    }
+
+    // ----------------------------------------------------
+    // CREATE SUN
+    // ----------------------------------------------------
+    function createSun(){
+      const loader = new THREE.TextureLoader();
+      
+      loader.load(
+        'textures/2k_sun.jpg',
+        (texture) => {
+          // Create Sun geometry - make it larger and more visible
+          const sunGeometry = new THREE.SphereGeometry(5.0, 64, 64);
+          
+          // Sun material - use texture with strong emissive for realistic glowing effect
+          const sunMaterial = new THREE.MeshBasicMaterial({
+            map: texture,
+            emissive: 0xffaa44,
+            emissiveIntensity: 2.0, // Increased for better visibility
+            color: 0xffffff,
+            side: THREE.DoubleSide
+          });
+          
+          sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+          sunMesh.position.set(0, 0, 0); // Center of solar system
+          scene.add(sunMesh);
+          
+          console.log('Sun created at position:', sunMesh.position);
+          
+          // Add subtle glow effect around Sun - closer to surface
+          const glowGeometry = new THREE.SphereGeometry(5.15, 64, 64);
+          const glowMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffff88,
+            transparent: true,
+            opacity: 0.4, // Reduced opacity for subtlety
+            blending: THREE.AdditiveBlending,
+            side: THREE.BackSide
+          });
+          const sunGlow = new THREE.Mesh(glowGeometry, glowMaterial);
+          sunMesh.add(sunGlow);
+          
+          // Add outer glow - smaller frame
+          const outerGlowGeometry = new THREE.SphereGeometry(5.3, 64, 64);
+          const outerGlowMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff6600,
+            transparent: true,
+            opacity: 0.25, // Reduced opacity
+            blending: THREE.AdditiveBlending,
+            side: THREE.BackSide
+          });
+          const outerGlow = new THREE.Mesh(outerGlowGeometry, outerGlowMaterial);
+          sunMesh.add(outerGlow);
+          
+          // Add point light at Sun position for realistic lighting
+          // Increased intensity and range to properly light all planets
+          const sunLight = new THREE.PointLight(0xffffff, 5.5, 400);
+          sunLight.position.set(0, 0, 0);
+          sunLight.castShadow = false; // Shadows disabled for performance
+          scene.add(sunLight);
+          
+          // Add directional light from Sun for better planet illumination
+          const directionalSunLight = new THREE.DirectionalLight(0xffffff, 2.2);
+          directionalSunLight.position.set(0, 0, 0);
+          directionalSunLight.castShadow = false;
+          scene.add(directionalSunLight);
+          
+          // Add fill light from opposite side for better visibility
+          const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+          fillLight.position.set(0, 0, -100);
+          scene.add(fillLight);
+        },
+        undefined,
+        (error) => {
+          console.error('Error loading sun texture:', error);
+          // Fallback: create Sun without texture - make it bright and visible
+          const sunGeometry = new THREE.SphereGeometry(5.0, 64, 64);
+          const sunMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffaa44,
+            emissive: 0xffaa44,
+            emissiveIntensity: 2.0
+          });
+          sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+          sunMesh.position.set(0, 0, 0);
+          scene.add(sunMesh);
+          
+          console.log('Sun created (fallback) at position:', sunMesh.position);
+          
+          // Add subtle glow
+          const glowGeometry = new THREE.SphereGeometry(5.15, 64, 64);
+          const glowMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffff88,
+            transparent: true,
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending,
+            side: THREE.BackSide
+          });
+          const sunGlow = new THREE.Mesh(glowGeometry, glowMaterial);
+          sunMesh.add(sunGlow);
+          
+          // Add outer glow
+          const outerGlowGeometry = new THREE.SphereGeometry(5.3, 64, 64);
+          const outerGlowMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff6600,
+            transparent: true,
+            opacity: 0.25,
+            blending: THREE.AdditiveBlending,
+            side: THREE.BackSide
+          });
+          const outerGlow = new THREE.Mesh(outerGlowGeometry, outerGlowMaterial);
+          sunMesh.add(outerGlow);
+          
+          // Add light
+          const sunLight = new THREE.PointLight(0xffffff, 5.5, 400);
+          sunLight.position.set(0, 0, 0);
+          scene.add(sunLight);
+          
+          // Add directional light
+          const directionalSunLight = new THREE.DirectionalLight(0xffffff, 2.2);
+          directionalSunLight.position.set(0, 0, 0);
+          scene.add(directionalSunLight);
+          
+          // Add fill light
+          const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+          fillLight.position.set(0, 0, -100);
+          scene.add(fillLight);
+        }
+      );
+    }
+
+    // ----------------------------------------------------
+    // LOAD PLANETS
+    // ----------------------------------------------------
+    function loadPlanets(onReady){
+      const loader = new THREE.TextureLoader();
+      let loaded = 0;
+
+      PLANETS.forEach((p, idx) => {
+        loader.load(
+          p.file,
+          tex => {
+            createPlanet(idx, tex);
+            if (++loaded === PLANETS.length) {
+              // Reposition Moon relative to Earth after all planets are loaded
+              repositionMoon();
+              onReady();
+            }
+          },
+          undefined,
+          () => {
+            createPlanet(idx, null); // fallback
+            if (++loaded === PLANETS.length) {
+              repositionMoon();
+              onReady();
+            }
+          }
+        );
+      });
+    }
+
+    // Reposition Moon relative to Earth
+    function repositionMoon(){
+      const moonIndex = PLANETS.findIndex(p => p.name === 'Moon');
+      const earthIndex = PLANETS.findIndex(p => p.name === 'Earth');
+      
+      if (moonIndex >= 0 && earthIndex >= 0 && planetObjects[moonIndex] && planetObjects[earthIndex]) {
+        const earthPos = planetObjects[earthIndex].position;
+        const earthRadius = PLANETS[earthIndex].radius * SCALE_RADIUS;
+        // Moon should be closer to Earth - about 1.3x Earth radius away
+        const moonOffset = earthRadius * 1.3;
+        planetObjects[moonIndex].position.set(
+          earthPos.x + moonOffset,
+          earthPos.y,
+          earthPos.z + moonOffset
+        );
+      }
+    }
+
+    function createPlanet(idx, tex){
+      const p = PLANETS[idx];
+      const geom = new THREE.SphereGeometry(p.radius * SCALE_RADIUS, 64, 64);
+      
+      // Enhanced material with subtle glow
+      const mat = tex ?
+           new THREE.MeshStandardMaterial({ 
+             map: tex,
+             emissive: new THREE.Color(0x111111), // Slight emissive for better visibility
+             emissiveIntensity: 0.15,
+             roughness: 0.7,
+             metalness: 0.15,
+             flatShading: false
+           }) :
+           new THREE.MeshStandardMaterial({ 
+             color: 0x666666,
+             emissive: new THREE.Color(0x111111),
+             emissiveIntensity: 0.15
+           });
+
+      const mesh = new THREE.Mesh(geom, mat);
+      
+      // Position planet in circular orbit around Sun (at center 0,0,0)
+      // Using orbital angle to spread planets around
+      let x, y, z;
+      
+      if (p.name === 'Moon') {
+        // Moon orbits around Earth, not Sun
+        // Find Earth's position
+        const earthIndex = PLANETS.findIndex(pl => pl.name === 'Earth');
+        if (earthIndex >= 0 && planetObjects[earthIndex]) {
+          const earthPos = planetObjects[earthIndex].position;
+          const earthRadius = PLANETS[earthIndex].radius * SCALE_RADIUS;
+          // Position Moon closer to Earth - about 1.3x Earth radius away
+          const moonOffset = earthRadius * 1.3;
+          x = earthPos.x + moonOffset;
+          y = earthPos.y;
+          z = earthPos.z + moonOffset;
+        } else {
+          // Fallback if Earth not loaded yet - will be repositioned later
+          const orbitAngle = p.angle || 0;
+          const orbitDistance = p.distance * SCALE_DISTANCE;
+          x = orbitDistance * Math.cos(orbitAngle);
+          z = orbitDistance * Math.sin(orbitAngle);
+          y = 0;
+        }
+      } else {
+        // Regular planets orbit around Sun
+        const orbitAngle = p.angle || 0;
+        const orbitDistance = p.distance * SCALE_DISTANCE;
+        x = orbitDistance * Math.cos(orbitAngle);
+        z = orbitDistance * Math.sin(orbitAngle);
+        y = 0; // All planets in same plane (ecliptic)
+      }
+      
+      mesh.position.set(x, y, z);
+      mesh.userData = { idx };
+      planetObjects[idx] = mesh;
+      scene.add(mesh);
+
+      // Add subtle atmospheric glow effect - more realistic
+      if (tex) {
+        // Inner glow - very subtle, using planet's texture
+        const glowGeometry = new THREE.SphereGeometry(p.radius * SCALE_RADIUS * 1.02, 64, 64);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+          map: tex,
+          transparent: true,
+          opacity: 0.15, // Reduced for subtlety
+          blending: THREE.AdditiveBlending,
+          side: THREE.BackSide,
+          depthWrite: false
+        });
+        const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
+        mesh.add(glowMesh);
+        
+        // Rim glow - atmospheric edge lighting from Sun
+        const rimGlowGeometry = new THREE.SphereGeometry(p.radius * SCALE_RADIUS * 1.05, 64, 64);
+        const rimGlowMaterial = new THREE.MeshBasicMaterial({
+          color: 0x88aaff, // Softer blue-white for atmospheric rim
+          transparent: true,
+          opacity: 0.08, // More subtle
+          blending: THREE.AdditiveBlending,
+          side: THREE.BackSide,
+          depthWrite: false
+        });
+        const rimGlow = new THREE.Mesh(rimGlowGeometry, rimGlowMaterial);
+        mesh.add(rimGlow);
+      }
+
+      // Add rings for Saturn
+      if (p.name === 'Saturn') {
+        const ringGroup = new THREE.Group();
+        const planetRadius = p.radius * SCALE_RADIUS;
+        
+        // Create multiple ring segments for a realistic look
+        const ringSegments = [
+          { innerRadius: planetRadius * 1.2, outerRadius: planetRadius * 1.8, opacity: 0.6 },
+          { innerRadius: planetRadius * 1.8, outerRadius: planetRadius * 2.2, opacity: 0.4 },
+          { innerRadius: planetRadius * 2.2, outerRadius: planetRadius * 2.6, opacity: 0.3 },
+          { innerRadius: planetRadius * 2.6, outerRadius: planetRadius * 3.0, opacity: 0.2 }
+        ];
+
+        ringSegments.forEach(segment => {
+          const ringGeometry = new THREE.RingGeometry(segment.innerRadius, segment.outerRadius, 128);
+          const ringMaterial = new THREE.MeshBasicMaterial({
+            color: 0xd4a574,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: segment.opacity,
+            emissive: new THREE.Color(0x5a4a3a),
+            emissiveIntensity: 0.05 // Reduced from 0.2 to make less flashy
+          });
+          const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+          ring.rotation.x = Math.PI / 2; // Rotate to be horizontal
+          ringGroup.add(ring);
+        });
+
+        // Add subtle glow to rings (reduced intensity)
+        const outerRingGeometry = new THREE.RingGeometry(planetRadius * 1.2, planetRadius * 3.1, 128);
+        const outerRingMaterial = new THREE.MeshBasicMaterial({
+          color: 0xd4a574,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.05, // Reduced from 0.1
+          blending: THREE.AdditiveBlending
+        });
+        const outerRing = new THREE.Mesh(outerRingGeometry, outerRingMaterial);
+        outerRing.rotation.x = Math.PI / 2;
+        ringGroup.add(outerRing);
+
+        mesh.add(ringGroup);
+        saturnRings = ringGroup; // Store rings reference
+      }
+    }
+
+    // ----------------------------------------------------
+    // ANIMATION LOOP
+    // ----------------------------------------------------
+    function animate(){
+      requestAnimationFrame(animate);
+      const dt = clock.getDelta();
+
+      planetObjects.forEach((m,i)=>{
+        if(m) m.rotation.y += (0.15 + i*0.03) * dt;
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    // ----------------------------------------------------
+    // CAMERA MOVE
+    // ----------------------------------------------------
+    function flyToPlanet(index, done){
+      if(isAnimating) return;
+      isAnimating = true;
+
+      const target = planetObjects[index];
+      if(!target){
+        isAnimating=false;
+        if(done) done();
+        return;
+      }
+
+      const startPos = camera.position.clone();
+      const radius = target.geometry.parameters.radius;
+
+      const endPos = target.position.clone().add(
+        new THREE.Vector3(0, radius*1.6 + 1.5, radius*2.2 + 3)
+      );
+
+      // Calculate distance for variable duration
+      const distance = startPos.distanceTo(endPos);
+      const duration = Math.max(4000, distance * 200); // Slower travel: at least 4 seconds, scales with distance
+      const startTime = performance.now();
+
+      function tick(now){
+        const elapsed = now - startTime;
+        const t = Math.min(1, elapsed / duration);
+        
+        // Smooth ease-in-out curve for gradual acceleration and deceleration
+        const ease = t < 0.5 
+          ? 2 * t * t 
+          : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+        // Interpolate camera position with slight curve
+        const currentPos = startPos.clone().lerp(endPos, ease);
+        
+        // Add slight vertical curve for more cinematic movement
+        const midPoint = startPos.clone().lerp(endPos, 0.5);
+        const curveHeight = distance * 0.1;
+        const curveOffset = Math.sin(ease * Math.PI) * curveHeight;
+        currentPos.y += curveOffset * 0.3;
+        
+        camera.position.copy(currentPos);
+        
+        // Always look directly at the target planet during movement
+        // This ensures the camera is always focused on the planet we're approaching
+        camera.lookAt(target.position);
+
+        if (t < 1) requestAnimationFrame(tick);
+        else {
+          // Ensure final position is exact and still looking at planet
+          camera.position.copy(endPos);
+          camera.lookAt(target.position);
+          isAnimating = false;
+          if (done) done();
+        }
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    // ----------------------------------------------------
+    // LANDING ANIMATION (Generic for any planet)
+    // ----------------------------------------------------
+    function landOnPlanet(index, done){
+      if(isAnimating) return;
+      isAnimating = true;
+
+      const target = planetObjects[index];
+      if(!target){
+        isAnimating = false;
+        if(done) done();
+        return;
+      }
+
+      const startPos = camera.position.clone();
+      const radius = target.geometry.parameters.radius;
+      
+      // Land close to planet surface - simulating touchdown
+      const landingPos = target.position.clone().add(
+        new THREE.Vector3(0, radius * 0.3, radius * 0.8)
+      );
+
+      const duration = 3000; // 3 second landing sequence
+      const startTime = performance.now();
+
+      function tick(now){
+        const elapsed = now - startTime;
+        const t = Math.min(1, elapsed / duration);
+        
+        // Smooth deceleration for landing
+        const ease = 1 - Math.pow(1 - t, 2.5);
+
+        const currentPos = startPos.clone().lerp(landingPos, ease);
+        camera.position.copy(currentPos);
+        
+        // Always look directly at the target planet during landing
+        camera.lookAt(target.position);
+
+        if (t < 1) requestAnimationFrame(tick);
+        else {
+          camera.position.copy(landingPos);
+          camera.lookAt(target.position);
+          isAnimating = false;
+          if (done) done();
+        }
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    // Legacy function for moon landing at the end
+    function landOnMoon(done){
+      const moonIndex = PLANETS.findIndex(p => p.name === "Moon");
+      landOnPlanet(moonIndex, done);
+    }
+
+    // ----------------------------------------------------
+    // SHOW LANDING OVERLAY
+    // ----------------------------------------------------
+    function showLandingOverlay(index){
+      const planet = PLANETS[index];
+      if(!planet) return;
+
+      // Set planet image from /planet/ folder (lowercase)
+      // Note: Earth and Moon might not have photos, fallback to texture
+      const planetNameLower = planet.name.toLowerCase();
+      if(planetNameLower === 'earth' || planetNameLower === 'moon'){
+        // Use texture as fallback for Earth and Moon
+        landingPlanetImage.src = planet.file;
+      } else {
+        landingPlanetImage.src = `planet/${planetNameLower}.jpg`;
+      }
+      landingPlanetName.textContent = planet.name;
+      landingComment.textContent = planet.comment;
+
+      // Keep nextBtn visible so user can skip landing overlay and go to next planet
+      // Make sure exitBtn is hidden (only shows on Moon)
+      exitBtn.style.display = "none";
+
+      // Show overlay with fade in
+      landingOverlay.style.display = "flex";
+      landingOverlay.style.opacity = "0";
+      setTimeout(() => {
+        landingOverlay.style.transition = "opacity 0.5s ease";
+        landingOverlay.style.opacity = "1";
+      }, 100);
+    }
+
+    function hideLandingOverlay(){
+      landingOverlay.style.transition = "opacity 0.3s ease";
+      landingOverlay.style.opacity = "0";
+      setTimeout(() => {
+        landingOverlay.style.display = "none";
+      }, 300);
+    }
+
+    // ----------------------------------------------------
+    // PLANET COMMENT
+    // ----------------------------------------------------
+    function showPlanetComment(index){
+      const planet = PLANETS[index];
+      if(planet && planet.comment){
+        planetNameEl.textContent = planet.name;
+        commentTextEl.textContent = planet.comment;
+        planetComment.classList.add("show");
+      }
+    }
+
+    function hidePlanetComment(){
+      planetComment.classList.remove("show");
+    }
+
+    // ----------------------------------------------------
+    // SUBTITLE INTRO ANIMATION
+    // ----------------------------------------------------
+    function showSubtitleIntro(){
+      // Hide 3D scene during subtitles to prevent seeing the surprise
+      if(renderer && renderer.domElement){
+        renderer.domElement.style.display = "none";
+      }
+
+      const messages = [
+        "I was thinking what I could do for your birthday",
+        "since you're so far away.",
+        "",
+        "I wanted to do something special",
+        "because you're special to me.",
+        "",
+        "So I made this journey through the stars for you, Yoon."
+      ];
+
+      let messageIndex = 0;
+
+      function showNextMessage(){
+        if(messageIndex >= messages.length){
+          // All messages shown, fade out and show main intro
+          subtitleText.classList.add("fade-out");
+          setTimeout(() => {
+            introSubtitle.style.display = "none";
+            // Show 3D scene after subtitles end
+            if(renderer && renderer.domElement){
+              renderer.domElement.style.display = "block";
+            }
+            intro.style.display = "flex";
+          }, 1000);
+          return;
+        }
+
+        const message = messages[messageIndex];
+        subtitleText.textContent = message;
+        subtitleText.classList.remove("show", "fade-out");
+        
+        // Force reflow
+        void subtitleText.offsetWidth;
+        
+        // Show with animation
+        setTimeout(() => {
+          subtitleText.classList.add("show");
+        }, 100);
+
+        // Wait before showing next message or fading out - slower timing
+        const delay = message === "" ? 1500 : 4500; // Longer delays for slower pace
+        messageIndex++;
+        
+        setTimeout(showNextMessage, delay);
+      }
+
+      // Start showing messages after a brief delay
+      setTimeout(showNextMessage, 500);
+    }
+
+    // ----------------------------------------------------
+    // FLOW
+    // ----------------------------------------------------
+    function startExperience(){
+      intro.style.display = "none";
+      enterBtn.style.display = "none";
+      nextBtn.style.display = "none"; // Hide Next Planet button
+      exitBtn.style.display = "none"; // Ensure exitBtn is hidden at start
+      musicToggle.style.display = "inline-block";
+
+      // Try to play audio with better error handling
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          audioPlaying = true;
+          musicToggle.textContent = "Pause Music";
+          console.log('Music started playing');
+        }).catch((error) => {
+          console.error('Error playing audio:', error);
+          audioPlaying = false;
+          // Show message to user that they need to interact
+          musicToggle.textContent = "Play Music";
+          musicToggle.title = "Click to play music (browser requires user interaction)";
+        });
+      }
+
+      currentIndex = 2;
+      journeyIndex = 0; // Start at Earth in journey
+      flyToPlanet(currentIndex, ()=>{
+        // Skip Earth entirely - go directly to next planet (Mars)
+        proceedToNextPlanet();
+      });
+    }
+
+    // Start audio on button click to satisfy browser autoplay requirements
+    function startAudioOnInteraction(){
+      if(!audioPlaying){
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            audioPlaying = true;
+            console.log('Music started from user interaction');
+          }).catch((error) => {
+            console.error('Error playing audio on interaction:', error);
+          });
+        }
+      }
+    }
+
+    enterBtn.onclick = () => {
+      startAudioOnInteraction();
+      startExperience();
+    };
+    enterBtn2.onclick = () => {
+      startAudioOnInteraction();
+      startExperience();
+    };
+
+    function proceedToNextPlanet(){
+      // Hide landing overlay
+      hideLandingOverlay();
+      hidePlanetComment();
+      
+      // Always ensure exitBtn is hidden (only shows on Moon)
+      exitBtn.style.display = "none";
+      
+      // Don't move if already at Moon (last in journey)
+      if (journeyIndex >= JOURNEY_ORDER.length - 1) {
+        return;
+      }
+      
+      // Move to next planet in journey order
+      journeyIndex++;
+      currentIndex = JOURNEY_ORDER[journeyIndex];
+
+      flyToPlanet(currentIndex, ()=>{
+        // After arriving, land on the planet
+        landOnPlanet(currentIndex, () => {
+          // After landing, show the landing overlay with planet photo and comment
+          showLandingOverlay(currentIndex);
+          
+          // If we reached Moon (last in journey), show exit option
+          if(PLANETS[currentIndex].name === "Moon"){
+            continueBtn.textContent = "Exit the rocket";
+            continueBtn.onclick = () => {
+              hideLandingOverlay();
+              exitBtn.style.display = "inline-block";
+              nextBtn.style.display = "none";
+              // Switch to birthday music
+              audio.pause();
+              audio.currentTime = 0;
+              const playPromise = birthdayAudio.play();
+              if (playPromise !== undefined) {
+                playPromise.then(() => {
+                  audioPlaying = true;
+                  console.log('Birthday music started playing');
+                }).catch((error) => {
+                  console.error('Error playing birthday audio:', error);
+                });
+              }
+              // Start moon landing sequence for final scene
+              landOnMoon(() => {
+                renderer.domElement.style.transition = "opacity 1000ms ease";
+                renderer.domElement.style.opacity = 0;
+                setTimeout(()=>{
+                  renderer.domElement.style.display = "none";
+                  final.style.display = "flex";
+                  wishesLeft.style.display = "block";
+                  wishesRight.style.display = "block";
+                  musicToggle.style.display = "none";
+                  setTimeout(() => {
+                    wishesLeft.classList.add("show");
+                    wishesRight.classList.add("show");
+                    setTimeout(() => {
+                      if(restartBtn){
+                        restartBtn.style.display = "block";
+                        setTimeout(() => {
+                          restartBtn.classList.add("show");
+                        }, 100);
+                      }
+                      // Show replay birthday button
+                      if(replayBirthdayBtn){
+                        replayBirthdayBtn.style.display = "block";
+                      }
+                    }, 2000);
+                  }, 500);
+                }, 1000);
+              });
+            };
+          } else {
+            // For all other planets, show continue button
+            continueBtn.textContent = "Continue Journey";
+            continueBtn.onclick = proceedToNextPlanet;
+          }
+        });
+      });
+    }
+
+    nextBtn.onclick = proceedToNextPlanet;
+    continueBtn.onclick = proceedToNextPlanet;
+
+    // Exit button is now handled in the continue button for Moon
+    // This is kept as a fallback
+    exitBtn.onclick = () => {
+      hidePlanetComment();
+      hideLandingOverlay();
+      exitBtn.style.display = "none";
+      
+      // Switch to birthday music
+      audio.pause();
+      audio.currentTime = 0;
+      const playPromise = birthdayAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          audioPlaying = true;
+          console.log('Birthday music started playing');
+        }).catch((error) => {
+          console.error('Error playing birthday audio:', error);
+        });
+      }
+      
+      // Start landing animation
+      landOnMoon(() => {
+        // After landing, fade out the 3D scene
+        renderer.domElement.style.transition = "opacity 1000ms ease";
+        renderer.domElement.style.opacity = 0;
+
+        setTimeout(()=>{
+          renderer.domElement.style.display = "none";
+          final.style.display = "flex";
+          wishesLeft.style.display = "block";
+          wishesRight.style.display = "block";
+          musicToggle.style.display = "none";
+
+          // Keep music playing - don't pause it!
+          
+          // Trigger wishes animation after gif is shown
+          setTimeout(() => {
+            wishesLeft.classList.add("show");
+            wishesRight.classList.add("show");
+            // Show restart button after wishes appear
+            setTimeout(() => {
+              if(restartBtn){
+                restartBtn.style.display = "block";
+                // Let CSS animation handle visibility, but ensure it's clickable
+                setTimeout(() => {
+                  restartBtn.classList.add("show");
+                }, 100);
+              }
+              // Show replay birthday button
+              if(replayBirthdayBtn){
+                replayBirthdayBtn.style.display = "block";
+              }
+            }, 2000);
+          }, 500);
+        }, 1000);
+      });
+    };
+
+    musicToggle.onclick = () => {
+      if(audioPlaying){
+        audio.pause();
+        audioPlaying=false;
+        musicToggle.textContent="Play Music";
+      } else {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            audioPlaying=true;
+            musicToggle.textContent="Pause Music";
+            musicToggle.title = "";
+          }).catch((error) => {
+            console.error('Error playing audio:', error);
+            alert('Unable to play music. Please check if the music.mp3 file exists and try clicking the button again.');
+          });
+        }
+      }
+    };
+
+    // ----------------------------------------------------
+    // RESTART
+    // ----------------------------------------------------
+    function restartExperience(){
+      // Hide final screen and wishes
+      final.style.display = "none";
+      wishesLeft.style.display = "none";
+      wishesRight.style.display = "none";
+      wishesLeft.classList.remove("show");
+      wishesRight.classList.remove("show");
+      restartBtn.style.display = "none";
+      restartBtn.classList.remove("show");
+      
+      // Hide replay birthday button
+      if(replayBirthdayBtn){
+        replayBirthdayBtn.style.display = "none";
+      }
+      
+      // Hide planet comment if visible
+      hidePlanetComment();
+      
+      // Reset animation state
+      isAnimating = false;
+      
+      // Reset camera and planet index
+      currentIndex = 2;
+      journeyIndex = 0;
+      
+      // Show 3D scene again - clear any transitions first
+      renderer.domElement.style.transition = "none";
+      renderer.domElement.style.display = "block";
+      renderer.domElement.style.opacity = 1;
+      
+      // Reset camera position to initial view
+      setTimeout(() => {
+        camera.position.set(0, 2, 22);
+        if(planetObjects[currentIndex]){
+          camera.lookAt(planetObjects[currentIndex].position);
+        }
+        renderer.render(scene, camera);
+      }, 50);
+      
+      // Reset to subtitle intro screen
+      // Hide 3D scene during subtitles
+      if(renderer && renderer.domElement){
+        renderer.domElement.style.display = "none";
+      }
+      introSubtitle.style.display = "flex";
+      intro.style.display = "none";
+      subtitleText.textContent = "";
+      subtitleText.classList.remove("show", "fade-out");
+      showSubtitleIntro();
+      enterBtn.style.display = "inline-block";
+      nextBtn.style.display = "none";
+      exitBtn.style.display = "none";
+      musicToggle.style.display = "none";
+      
+      // Stop and reset audio (both regular and birthday)
+      audio.pause();
+      audio.currentTime = 0;
+      birthdayAudio.pause();
+      birthdayAudio.currentTime = 0;
+      audioPlaying = false;
+    }
+
+    // Set up restart button with multiple methods for reliability
+    if(restartBtn){
+      restartBtn.onclick = restartExperience;
+      restartBtn.addEventListener('click', restartExperience);
+    }
+
+    // Set up replay birthday button
+    if(replayBirthdayBtn){
+      replayBirthdayBtn.onclick = () => {
+        birthdayAudio.currentTime = 0;
+        const playPromise = birthdayAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            console.log('Birthday music replayed');
+          }).catch((error) => {
+            console.error('Error replaying birthday audio:', error);
+          });
+        }
+      };
+    }
+
+    // ----------------------------------------------------
+    // START
+    // ----------------------------------------------------
+    initThree();
+    loadPlanets(()=>{
+      camera.position.set(0, 2, 22);
+      camera.lookAt(planetObjects[currentIndex].position);
+      animate();
+      flyToPlanet(currentIndex);
+    });
+
+    // Start subtitle intro animation
+    showSubtitleIntro();
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Happy Birthday Yoon — Cosmic Journey</title>
+  <title>Happy Birthday Yoon!</title>
 
   <style>
     html,body{
@@ -92,6 +92,49 @@
       transform:translateY(-20px);
       transition:opacity 1s ease, transform 1s ease;
     }
+    /* Glowing text animations - only glow effect */
+    .subtitle-text .glow-word{
+      display:inline-block;
+      color:#ffcccc;
+      animation:glowPulse 2s ease-in-out infinite;
+      font-weight:400;
+    }
+    .subtitle-text .glow-word-strong{
+      display:inline-block;
+      color:#ffaaaa;
+      animation:glowPulseStrong 2.5s ease-in-out infinite;
+      font-weight:500;
+    }
+    .subtitle-text .glow-word-special{
+      display:inline-block;
+      color:#ffaaaa;
+      animation:glowPulseSpecial 3s ease-in-out infinite;
+      font-weight:500;
+    }
+    @keyframes glowPulse{
+      0%, 100%{
+        text-shadow:0 0 10px rgba(255,200,200,0.8), 0 0 20px rgba(255,150,150,0.6), 0 0 30px rgba(255,100,100,0.4);
+      }
+      50%{
+        text-shadow:0 0 20px rgba(255,200,200,1), 0 0 30px rgba(255,150,150,0.8), 0 0 40px rgba(255,100,100,0.6);
+      }
+    }
+    @keyframes glowPulseStrong{
+      0%, 100%{
+        text-shadow:0 0 15px rgba(255,170,170,1), 0 0 25px rgba(255,120,120,0.8), 0 0 35px rgba(255,80,80,0.6), 0 0 45px rgba(255,50,50,0.4);
+      }
+      50%{
+        text-shadow:0 0 25px rgba(255,170,170,1), 0 0 35px rgba(255,120,120,1), 0 0 45px rgba(255,80,80,0.8), 0 0 55px rgba(255,50,50,0.6);
+      }
+    }
+    @keyframes glowPulseSpecial{
+      0%, 100%{
+        text-shadow:0 0 20px rgba(255,150,150,1), 0 0 30px rgba(255,100,100,0.8), 0 0 40px rgba(255,80,80,0.6), 0 0 50px rgba(255,50,50,0.4);
+      }
+      50%{
+        text-shadow:0 0 30px rgba(255,150,150,1), 0 0 40px rgba(255,100,100,1), 0 0 50px rgba(255,80,80,0.9), 0 0 60px rgba(255,50,50,0.7);
+      }
+    }
     @media (max-width:768px){
       .subtitle-text{
         font-size:20px;
@@ -137,7 +180,7 @@
       text-shadow:0 2px 12px rgba(0,0,0,0.6);
       opacity:0;
       visibility:hidden;
-      max-width:300px;
+      max-width:400px;
       padding:24px;
       background:linear-gradient(135deg, rgba(40,5,5,0.9), rgba(30,0,0,0.85));
       border:1px solid rgba(255,100,100,0.3);
@@ -316,9 +359,9 @@
 
     <div id="intro" class="overlay" style="display:none">
       <div class="card">
-        <h1>So far space travel isn't possible but I make it to feel a little bit like our dream journey!</h1>
-        <p>Click <strong>Enter Rocket</strong> to board. We'll visit the planets of the Solar System.
-           When we return to the Moon, click <strong>Exit the rocket</strong> for your surprise.</p>
+        <h1>So far space travel isn't possible but I make this site to make you feel a little bit like our dream journey!</h1>
+        <p>Click <strong>Enter Rocket</strong> to board. We'll visit the planets of the Solar System!
+           When we return to the Moon, click <strong>Exit the rocket</strong> for your surprise!</p>
 
         <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
           <button id="enterBtn2" class="btn">Enter Rocket</button>
@@ -329,27 +372,30 @@
     <div id="final" class="final">
       <img id="finalGif" src="moon_anime.gif" />
       <div id="wishesLeft" class="wishes left" style="display:none">
-        <div class="wish-title">Happy Birthday, <strong>Yoon</strong>! 🎂</div>
-        <div class="wish-emoji">✨🌙⭐</div>
+        <div class="wish-title">Happy Birthday, Yoon!</div>
         <div class="wish-text">
-          As you sit here on the moon, looking out at the stars, I hope you know how special you are. 
-          Your kindness lights up every room you enter, just like the stars light up the night sky.
+          It still amazes me how our paths crossed on Slowly - like the universe conspired in the most unexpected ways just to bring us together. Meeting you feels like something written in the stars, and every moment since has been filled with wonder and joy.
         </div>
         <div class="wish-text">
-          May this new year bring you endless joy, incredible adventures, and dreams that reach beyond the stars. 
-          You deserve all the happiness the universe has to offer.
+          On your special day, I wish for you all the happiness and magic the world can offer. May your year ahead be full of laughter, love, and dreams coming true. I hope you always find moments that make your heart soar - just like the moon lighting up the night sky.
+        </div>
+        <div class="wish-text">
+          Speaking of the moon… I hope this little journey through the stars I made for you reminds you how special you are. Like the moon, you have a quiet, powerful light that touches everything around you.
         </div>
       </div>
       <div id="wishesRight" class="wishes right" style="display:none">
-        <div class="wish-title">To Many More Adventures! 🚀</div>
-        <div class="wish-emoji">💫🌟🎉</div>
         <div class="wish-text">
-          From Earth to the Moon, and everywhere in between — may your journey through life be as beautiful 
-          and wondrous as this cosmic adventure we just shared together.
+          And just like the moon in the sky, I find myself drawn to your brightness, your warmth, and the way you make every moment feel special.
         </div>
         <div class="wish-text">
-          Here's to another amazing year filled with laughter, love, and moments that take your breath away. 
-          Keep shining bright, Yoon! 🌟
+          I can't wait to see where this journey takes us, and I hope we will have plenty of adventures together - through the Earth, the stars, the Moon, and all the little corners of the universe we haven't discovered yet.
+        </div>
+        <div class="wish-text">
+          So here's to you, Yoon: to your heart, your dreams, and your magic. Happy birthday - I hope it's as beautiful, bright, and unforgettable as you are.
+        </div>
+        <div class="wish-text" style="font-style:italic;margin-top:20px;">
+          With all my heart, warmth and a little bit of starlight,<br>
+          Kuba
         </div>
       </div>
       <button id="restartBtn" class="btn restart-btn" style="display:none">Let's fly again! 🚀</button>
@@ -371,15 +417,15 @@
 // Real AU: Mercury:0.39, Venus:0.72, Earth:1.0, Mars:1.52, Jupiter:5.2, Saturn:9.5, Uranus:19.2, Neptune:30.1
 // Orbital angles: Spread planets around Sun in circular orbits (in radians)
 const PLANETS = [
-  {name:'Mercury', file:'textures/2k_mercury.jpg', radius:0.22, distance:6.2, angle:0, comment:'Mercury! The speed demon of the solar system. It\'s like the planet that never learned to slow down! 🏃‍♂️💨'},
-  {name:'Venus',   file:'textures/2k_venus.jpg',   radius:0.55, distance:11.5, angle:Math.PI * 0.4, comment:'Venus! The hottest planet (literally). It\'s basically a spa day gone wrong - way too hot! 🔥🌡️'},
+  {name:'Mercury', file:'textures/2k_mercury.jpg', radius:0.22, distance:6.2, angle:0, comment:'Mercury is so fast, hot, and unforgiving.\nIt orbits the Sun like it\'s late for work.\nIf you feel the heat  - that\'s normal. If you start glowing - well thats also normal hahaha'},
+  {name:'Venus',   file:'textures/2k_venus.jpg',   radius:0.55, distance:11.5, angle:Math.PI * 0.4, comment:'Venus looks beautiful… and absolutely chaotic. Hotter than Mercury (but definitely not hotter than You 😏)\nIts wrapped in clouds, full of drama.\nThe diva of the solar system.'},
   {name:'Earth',   file:'textures/2k_earth.jpg',   radius:0.65, distance:16, angle:Math.PI * 0.8, comment:'Earth! Home sweet home! The only planet with pizza delivery (so far). 🏠🌍'},
-  {name:'Mars',    file:'textures/2k_mars.jpg',    radius:0.34, distance:20, angle:Math.PI * 1.2, comment:'Mars! The red planet where everyone wants to move. Real estate is cheap, but the commute is killer! 🚀🔴'},
-  {name:'Jupiter', file:'textures/2k_jupiter.jpg', radius:2.5, distance:28, angle:Math.PI * 1.6, comment:'Jupiter! The big boss of planets. It\'s so huge, it could fit all the other planets inside! Talk about showing off! 🌪️👑'},
-  {name:'Saturn',  file:'textures/2k_saturn.jpg',  radius:2.1, distance:42, angle:Math.PI * 2.0, comment:'Saturn! The planet with the coolest accessories - those rings are absolutely stunning! Fashion icon of the solar system! 💍✨'},
-  {name:'Uranus',  file:'textures/2k_uranus.jpg',  radius:0.9, distance:52, angle:Math.PI * 2.4, comment:'Uranus! The planet that rolls sideways through space. It\'s like the solar system\'s rebel! 😎🔄'},
-  {name:'Neptune', file:'textures/2k_neptune.jpg', radius:0.88, distance:65, angle:Math.PI * 2.8, comment:'Neptune! The farthest planet, living its best life in the outer suburbs. Very chill vibes! 🌊💙'},
-  {name:'Moon',    file:'textures/2k_moon.jpg',    radius:0.12, distance:17.5, angle:Math.PI * 0.8, comment:'The Moon! Earth\'s loyal sidekick. Always there, always watching. The best neighbor ever! 🌙💫'}
+  {name:'Mars',    file:'textures/2k_mars.jpg',    radius:0.34, distance:20, angle:Math.PI * 1.2, comment:'Mmm red, dusty and dramatic.\nThe robots here take better selfies than I ever will. I\'m not jealous. (Okay, maybe a little hahah)'},
+  {name:'Jupiter', file:'textures/2k_jupiter.jpg', radius:2.5, distance:28, angle:Math.PI * 1.6, comment:'We\'re not landing on Jupiter it\'s too dangerous - just waving from a safe distance. Europa is cold, icy, and full of secrets.\nFeels like a hidden level in a space game. I really like the vibe.'},
+  {name:'Saturn',  file:'textures/2k_saturn.jpg',  radius:2.1, distance:42, angle:Math.PI * 2.0, comment:'Welcome to Saturn my dear! and to our colony among the rings. Abraxas is really\nbeautiful, maybe slightly chaotic, actually no one here fully knows what they\'re doing and never plan anything. So yeah, it feels like home already! hahah'},
+  {name:'Uranus',  file:'textures/2k_uranus.jpg',  radius:0.9, distance:52, angle:Math.PI * 2.4, comment:'The name of that planet was always so funny for me hahah (Ur anus - you studied biology so I guess you know what I mean 😂)\nUranus does everything sideways. It spins like that because rules are optional. Planet energy: "I\'m weird and I\'m fine with it."\nRespect.'},
+  {name:'Neptune', file:'textures/2k_neptune.jpg', radius:0.88, distance:65, angle:Math.PI * 2.8, comment:'Ayy, I think I need a hug to survive this brrr it\'s soo cold here🥶\nBut beside this Neptune is really perfect for staring into space 🥹'},
+  {name:'Moon',    file:'textures/2k_moon.jpg',    radius:0.12, distance:17.5, angle:Math.PI * 0.8, comment:'And finally… the Moon.\nOur favorite stop! 😍\nQuiet, cozy, with perfect lighting and view at our home! We can stay here a bit longer the Moon doesn\'t mind 🤗'}
 ];
 
 const SCALE_RADIUS = 1;      // teraz nie trzeba mocno skalować
@@ -974,12 +1020,13 @@ const SCALE_DISTANCE = 1;    // odległości już dopasowane
       if(!planet) return;
 
       // Set planet image from /planet/ folder (lowercase)
-      // Note: Earth and Moon might not have photos, fallback to texture
+      // Note: Earth might not have photo, fallback to texture
       const planetNameLower = planet.name.toLowerCase();
-      if(planetNameLower === 'earth' || planetNameLower === 'moon'){
-        // Use texture as fallback for Earth and Moon
+      if(planetNameLower === 'earth'){
+        // Use texture as fallback for Earth
         landingPlanetImage.src = planet.file;
       } else {
+        // Use image from /planet/ folder (including moon.jpg)
         landingPlanetImage.src = `planet/${planetNameLower}.jpg`;
       }
       landingPlanetName.textContent = planet.name;
@@ -1032,13 +1079,13 @@ const SCALE_DISTANCE = 1;    // odległości już dopasowane
       }
 
       const messages = [
-        "I was thinking what I could do for your birthday",
-        "since you're so far away.",
+        "I was thinking what I could do for your <span class='glow-word'>birthday</span>",
+        "since you're so <span class='glow-word'>far away</span>.",
         "",
-        "I wanted to do something special",
-        "because you're special to me.",
+        "I wanted to do something <span class='glow-word-strong'>special</span>",
+        "because <span class='glow-word-special'>you are special</span> to me.",
         "",
-        "So I made this journey through the stars for you, Yoon."
+        "So I made this <span class='glow-word'>journey through the stars</span> for you, <span class='glow-word-special'>Yoon</span>!"
       ];
 
       let messageIndex = 0;
@@ -1059,7 +1106,7 @@ const SCALE_DISTANCE = 1;    // odległości już dopasowane
         }
 
         const message = messages[messageIndex];
-        subtitleText.textContent = message;
+        subtitleText.innerHTML = message; // Use innerHTML to support HTML tags
         subtitleText.classList.remove("show", "fade-out");
         
         // Force reflow
@@ -1349,7 +1396,7 @@ const SCALE_DISTANCE = 1;    // odległości już dopasowane
       }
       introSubtitle.style.display = "flex";
       intro.style.display = "none";
-      subtitleText.textContent = "";
+      subtitleText.innerHTML = ""; // Use innerHTML to clear HTML content
       subtitleText.classList.remove("show", "fade-out");
       showSubtitleIntro();
       enterBtn.style.display = "inline-block";
